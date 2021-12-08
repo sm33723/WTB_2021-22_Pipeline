@@ -10,13 +10,8 @@ steps:
 - script: sudo npm install --only=prod
   displayName: 'npm install --only=prod'
 
-- script: sudo npm install -g @angular/cli
-  displayName: 'npm install -g @angular/cli'
-- task: AngularCLI@1
-  displayName: 'ng build'
-  inputs:
-    command: 'build'
-
+- script: sudo npm run build
+  displayName: 'npm run build'
 # # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
