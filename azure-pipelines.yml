@@ -7,6 +7,7 @@ pool:
   - npm
 
 steps:
+- script: npm install
 - task: AngularCLI@1
   inputs:
     command: 'build'
