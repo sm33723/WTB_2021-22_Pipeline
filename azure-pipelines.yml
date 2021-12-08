@@ -7,8 +7,10 @@ pool:
   - npm
 
 steps:
-- script: npm install
+- script:  sudo npm install --only=prod
+  displayName: 'npm install'
 - task: AngularCLI@1
+  displayName: 'ng build'
   inputs:
     command: 'build'
 
