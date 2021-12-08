@@ -13,7 +13,6 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    cd '$(System.DefaultWorkingDirectory)/HelloWorld'
     npm install -g @angular/cli
     npm install
     ng build --prod
