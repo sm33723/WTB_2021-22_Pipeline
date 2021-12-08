@@ -5,13 +5,19 @@ pool:
   vmImage: 'ubuntu-20.04'
   demands:
   - npm
-
+  
 steps:
-- script: sudo npm install --only=prod
-  displayName: 'npm install --only=prod'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 
-- script: sudo npm run build
-  displayName: 'npm run build'
+- script: |
+    cd '$(System.DefaultWorkingDirectory)/HelloWorld'
+    npm install -g @angular/cli
+    npm install
+    ng build --prod
+  displayName: 'npm install and build'
 # # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
