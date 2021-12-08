@@ -7,27 +7,23 @@ pool:
   - npm
 
 steps:
-# instaluje dependencies, angular/cli 
-- script: sudo npm install -g @angular/cli && npm install --only=prod
-  displayName: 'Install npm dependecies and Angular CLI'
+- task: AngularCLI@1
+  inputs:
+    command: 'build'
 
-# buduje projekt angular'a do folderu 'dist'
-- script: ng build --output-path dist
-  displayName: 'Build angular project with Angular CLI'
-
-# kopiuje zbudowany projekt do `ArtifactStagingDirectory`
+# # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
     Contents: 'dist/*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# wysyła zbudowany projekt jak artefakt do Azure'a
-# format nazwy - > `BUILD_<DATA BUILD'a>`
+# # wysyła zbudowany projekt jak artefakt do Azure'a
+# # format nazwy - > `BUILD_<DATA BUILD'a>`
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact [ BUILD_$(date +%Y-%m-%d_%H-%M-%S) ]'
   inputs: 
     PathtoPublish: $(Build.ArtifactStagingDirectory)
     ArtifactName: BUILD_$(date +%Y-%m-%d_%H-%M-%S)
 
-# #TODO: *publish build web app*
+# # #TODO: *publish build web app*
