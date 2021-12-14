@@ -1,51 +1,58 @@
 trigger:
 - '*'
 
-pool:
-  vmImage: 'ubuntu-20.04'
-  demands:
-  - npm
+stages:
+- stage: 'Build'
+  displayName: 'Build Stage'
+  jobs: 
+  - job:
+    displayName: 'Build Job'
+
+    pool:
+      vmImage: 'ubuntu-20.04'
+      demands:
+      - npm
+
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '16.13.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install -g @angular/cli
+        
+        npm install
+
+        ng build
+
+        echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
+        echo "" >> dist/build.info
+        echo "$(ng --version)" >> dist/buildBuildarchive'
+
+    # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
+    - task: CopyFiles@2
+      displayName: 'Copy Build project to Artifact Staging Directory'
+      inputs:
+        Contents: |
+          'build.zip'
+          'dist/build.info'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    # wysyła zbudowany projekt jak artefakt do Azure'a
+    # format nazwy - > `BUILD_<DATA BUILD'a>`
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs: 
+        PathtoPublish: $(Build.ArtifactStagingDirectory)
+        ArtifactName: Build
   
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.13.x'
-  displayName: 'Install Node.js'
+#TODO: *publish build web app*
 
-- script: ls -l 
-  displayName: 'list'
+- stage: 'Dev'
+  displayName: 'Publish-Dev Stage'
+  dependsOn: Build
 
-# kopiuje zbudowany projekt do `ArtifactStagingDirectory`
-- script: |
-    npm install -g @angular/cli
-    
-    npm install
-
-    ng build
-
-    echo "BUILD @ $(date +%Y-%m-%d_%H-%M-%S)" > dist/build.info
-    echo "npm version: $(npm -v)" >> dist/build.info
-    echo "ng version: $(ng --version)" >> dist/build.info
-
-    zip -r build.zip ./dist
-  displayName: 'npm install, build and ZIP archive'
-
-- script: ls -l 
-  displayName: 'list'
-
-# # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
-- task: CopyFiles@2
-  displayName: 'Copy Build project to Artifact Staging Directory'
-  inputs:
-    Contents: 'build.zip'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-# # wysyła zbudowany projekt jak artefakt do Azure'a
-# # format nazwy - > `BUILD_<DATA BUILD'a>`
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
-  inputs: 
-    PathtoPublish: $(Build.ArtifactStagingDirectory)
-    ArtifactName: Build
-
-# # #TODO: *publish build web app*
+- stage: 'Prod'
+  displayName: 'Publish-Prod Stage'
+  dependsOn: Dev
