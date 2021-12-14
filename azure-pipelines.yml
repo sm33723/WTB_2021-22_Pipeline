@@ -13,8 +13,8 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-  BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
-  echo $BUILD_NAME
+    BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
+    echo $BUILD_NAME
   displayName: 'Generate Build Name'
 
 - script: ls -l 
