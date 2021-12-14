@@ -25,6 +25,9 @@ steps:
     ng build --prod
   displayName: 'npm install and build'
 
+- script: ls -l 
+  displayName: 'list'
+
 # # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
