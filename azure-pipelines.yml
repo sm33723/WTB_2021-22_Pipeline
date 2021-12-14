@@ -12,41 +12,32 @@ steps:
     versionSpec: '16.13.x'
   displayName: 'Install Node.js'
 
-- script: |
-    BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
-    echo $BUILD_NAME
-  displayName: 'Generate Build Name'
-
 - script: ls -l 
   displayName: 'list'
-
-- script: ls -l ./src
-  displayName: 'list src'
-
-- script: echo $BUILD_NAME
-  displayName: 'echo build name'
 
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - script: |
-    echo "npm install -g @angular/cli:"
     npm install -g @angular/cli
-    echo "npm install:"
+    
     npm install
-    echo "ng build:"
+
     ng build
-  displayName: 'npm install and build'
+
+    echo "BUILD @ $(date +%Y-%m-%d_%H-%M-%S)" > dist/build.info
+    echo "npm version: $(npm -v)" >> dist/build.info
+    echo "ng version: $(ng --version)" >> dist/build.info
+
+    zip -r build.zip ./dist
+  displayName: 'npm install, build and ZIP archive'
 
 - script: ls -l 
   displayName: 'list'
-
-- script: zip -r $BUILD_NAME ./dist
-  displayName: 'zip build to .zip archive'
 
 # # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
-    Contents: './$BUILD_NAME'
+    Contents: 'build.zip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # # wysyła zbudowany projekt jak artefakt do Azure'a
