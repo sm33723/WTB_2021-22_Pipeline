@@ -52,7 +52,27 @@ stages:
 - stage: 'Dev'
   displayName: 'Publish-Dev Stage'
   dependsOn: Build
+  jobs: 
+  - job:
+    displayName: 'Dev'
+
+    pool:
+      vmImage: 'ubuntu-20.04'
+      demands:
+      - npm
+
+    - script: echo "Dev"
 
 - stage: 'Prod'
   displayName: 'Publish-Prod Stage'
   dependsOn: Dev
+  jobs: 
+  - job:
+    displayName: 'Prod'
+
+    pool:
+      vmImage: 'ubuntu-20.04'
+      demands:
+      - npm
+
+    - script: echo "Prod"
