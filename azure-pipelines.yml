@@ -32,15 +32,15 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
-    Contents: 'src/dist/*'
+    Contents: './dist/*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # # wysyła zbudowany projekt jak artefakt do Azure'a
 # # format nazwy - > `BUILD_<DATA BUILD'a>`
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact [ BUILD_$(date +%Y-%m-%d_%H-%M-%S) ]'
+  displayName: 'Publish Artifact'
   inputs: 
     PathtoPublish: $(Build.ArtifactStagingDirectory)
-    ArtifactName: BUILD_$(date +%Y-%m-%d_%H-%M-%S)
+    ArtifactName: Build
 
 # # #TODO: *publish build web app*
