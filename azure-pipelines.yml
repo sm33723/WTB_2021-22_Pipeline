@@ -5,32 +5,38 @@ pool:
   vmImage: 'ubuntu-20.04'
   demands:
   - npm
-
+  
 steps:
-# instaluje dependencies, angular/cli 
-- script: sudo npm install -g @angular/cli && npm install --only=prod
-  displayName: 'Install npm dependecies and Angular CLI'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.13.x'
+  displayName: 'Install Node.js'
 
-# buduje projekt angular'a do folderu 'dist'
-- script: ng build --output-path dist
-  displayName: 'Build angular project with Angular CLI'
-
+<<<<<<< HEAD
 - script: ls -l ; cat '$(Build.ArtifactStagingDirectory)' 
   displayName: 'list'
 
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
+=======
+- script: |
+    npm install -g @angular/cli
+    npm install
+    ng build --prod
+  displayName: 'npm install and build'
+# # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
+>>>>>>> 12eb2f2ac7a3f5b233edc7249bf8c32c5ee4b8c4
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
     Contents: 'dist/*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# wysyła zbudowany projekt jak artefakt do Azure'a
-# format nazwy - > `BUILD_<DATA BUILD'a>`
+# # wysyła zbudowany projekt jak artefakt do Azure'a
+# # format nazwy - > `BUILD_<DATA BUILD'a>`
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact [ BUILD_$(date +%Y-%m-%d_%H-%M-%S) ]'
   inputs: 
     PathtoPublish: $(Build.ArtifactStagingDirectory)
     ArtifactName: BUILD_$(date +%Y-%m-%d_%H-%M-%S)
 
-# #TODO: *publish build web app*
+# # #TODO: *publish build web app*
