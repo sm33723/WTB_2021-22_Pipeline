@@ -15,6 +15,9 @@ steps:
 - script: ng build --output-path dist
   displayName: 'Build angular project with Angular CLI'
 
+- script: ls -l ; cat '$(Build.ArtifactStagingDirectory)' 
+  displayName: 'list'
+
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
