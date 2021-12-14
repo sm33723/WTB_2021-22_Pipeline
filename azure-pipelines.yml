@@ -26,6 +26,7 @@ stages:
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
+        zip -r build.zip ./dist
 
     # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
     - task: CopyFiles@2
