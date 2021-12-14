@@ -30,12 +30,13 @@ stages:
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
+      displayName: 'build project'
 
     # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
     - task: CopyFiles@2
-      displayName: 'Copy Build project to Artifact Staging Directory'
+      displayName: 'Copy project to Artifact Staging Directory'
       inputs:
-        Contents: 'dist'
+        Contents: 'dist/*'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     # wysyła zbudowany projekt jak artefakt do Azure'a
