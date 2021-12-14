@@ -2,23 +2,27 @@ trigger:
 - '*'
 
 stages:
+# Build
 - stage: 'Build'
   displayName: 'Build Stage'
   jobs: 
   - job:
     displayName: 'Build Job'
 
+    # build na ubuntu-20.04
     pool:
       vmImage: 'ubuntu-20.04'
       demands:
       - npm
 
     steps:
+      # installuje Node
     - task: NodeTool@0
       inputs:
         versionSpec: '16.13.x'
       displayName: 'Install Node.js'
 
+      # skrypt bash -> instalacja angular cli + dependencies + build + build.info
     - script: |
         npm install -g @angular/cli
         npm install
@@ -26,19 +30,12 @@ stages:
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
-        zip -r build.zip ./dist
 
     # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
     - task: CopyFiles@2
       displayName: 'Copy Build project to Artifact Staging Directory'
       inputs:
-        Contents: 'build.zip'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-    - task: CopyFiles@2
-      displayName: 'Copy Build project to Artifact Staging Directory'
-      inputs:
-        Contents: 'dist/build.info'
+        Contents: 'dist'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     # wysyła zbudowany projekt jak artefakt do Azure'a
