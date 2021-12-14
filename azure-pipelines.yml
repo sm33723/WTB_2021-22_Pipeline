@@ -66,6 +66,7 @@ stages:
 - stage: 'Prod'
   displayName: 'Publish-Prod Stage'
   dependsOn: Dev
+  environment: prod
   jobs: 
   - job:
     displayName: 'Prod'
@@ -74,8 +75,6 @@ stages:
       vmImage: 'ubuntu-20.04'
       demands:
       - npm
-
-    environment: prod
 
     steps:
     - script: echo "Prod"
