@@ -12,7 +12,9 @@ steps:
     versionSpec: '16.13.x'
   displayName: 'Install Node.js'
 
-- script: echo BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
+- script: |
+  BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
+  echo $BUILD_NAME
   displayName: 'Generate Build Name'
 
 - script: ls -l 
@@ -26,11 +28,11 @@ steps:
 
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - script: |
-    echo "npm install -g @angular/cli"
+    echo "npm install -g @angular/cli:"
     npm install -g @angular/cli
-    echo "npm install"
+    echo "npm install:"
     npm install
-    echo "ng build"
+    echo "ng build:"
     ng build
   displayName: 'npm install and build'
 
