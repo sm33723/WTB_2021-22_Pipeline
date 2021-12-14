@@ -21,11 +21,8 @@ stages:
 
     - script: |
         npm install -g @angular/cli
-        
         npm install
-
         ng build
-
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/buildBuildarchive'
@@ -75,6 +72,6 @@ stages:
       vmImage: 'ubuntu-20.04'
       demands:
       - npm
-      
+
     steps:
     - script: echo "Prod"
