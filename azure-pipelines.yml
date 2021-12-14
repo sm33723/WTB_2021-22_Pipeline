@@ -12,11 +12,17 @@ steps:
     versionSpec: '16.13.x'
   displayName: 'Install Node.js'
 
+- script: BUILD_NAME=BUILD_$(date +%Y-%m-%d_%H-%M-%S)
+  displayName: 'Generate Build Name'
+
 - script: ls -l 
   displayName: 'list'
 
 - script: ls -l ./src
   displayName: 'list src'
+
+- script: echo $BUILD_NAME
+  displayName: 'echo build name'
 
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - script: |
@@ -28,11 +34,14 @@ steps:
 - script: ls -l 
   displayName: 'list'
 
+- script: zip -r $BUILD_NAME ./dist
+  displayName: 'zip build to .zip archive'
+
 # # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
-    Contents: './dist/*'
+    Contents: './$BUILD_NAME'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # # wysyła zbudowany projekt jak artefakt do Azure'a
