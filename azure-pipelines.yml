@@ -75,7 +75,9 @@ stages:
       vmImage: 'ubuntu-20.04'
       demands:
       - npm
-    environment: prod
 
     steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440
+
     - script: echo "Prod"
