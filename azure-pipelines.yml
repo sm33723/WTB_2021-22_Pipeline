@@ -31,9 +31,13 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy Build project to Artifact Staging Directory'
       inputs:
-        Contents: |
-          'build.zip'
-          'dist/build.info'
+        Contents: 'build.zip'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: CopyFiles@2
+      displayName: 'Copy Build project to Artifact Staging Directory'
+      inputs:
+        Contents: 'dist/build.info'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     # wysyła zbudowany projekt jak artefakt do Azure'a
