@@ -76,7 +76,7 @@ stages:
       - npm
 
     steps:
-    - task: ManualValidation@0
+    - task: ManualValidation@1
       timeoutInMinutes: 1440  
-      
+
     - script: echo "Prod"
