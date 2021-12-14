@@ -30,13 +30,14 @@ stages:
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
+        zip -r build.zip ./dist
       displayName: 'build project'
 
     # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
     - task: CopyFiles@2
       displayName: 'Copy project to Artifact Staging Directory'
       inputs:
-        Contents: 'dist/*'
+        Contents: 'build.zip'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     # wysyła zbudowany projekt jak artefakt do Azure'a
@@ -46,8 +47,6 @@ stages:
       inputs: 
         PathtoPublish: $(Build.ArtifactStagingDirectory)
         ArtifactName: Build
-  
-#TODO: *publish build web app*
 
 - stage: 'Dev'
   displayName: 'Publish-Dev Stage'
@@ -77,4 +76,7 @@ stages:
       - npm
 
     steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 1440  
+      
     - script: echo "Prod"
