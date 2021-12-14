@@ -15,6 +15,9 @@ steps:
 - script: ls -l 
   displayName: 'list'
 
+- script: ls -l ./src
+  displayName: 'list src'
+
 # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
 - script: |
     npm install -g @angular/cli
@@ -26,7 +29,7 @@ steps:
 - task: CopyFiles@2
   displayName: 'Copy Build project to Artifact Staging Directory'
   inputs:
-    Contents: 'dist/*'
+    Contents: 'src/dist/*'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # # wysyła zbudowany projekt jak artefakt do Azure'a
