@@ -62,12 +62,24 @@ stages:
       vmImage: 'ubuntu-20.04'
 
     steps:
-    - download: current
-      artifact: Build
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: Build
+        downloadPath: '$(System.ArtifactsDirectory)' 
 
     - script: ls
 
-    - script: echo $(System.DefaultWorkingDirectory)
+    - script: |
+      echo $(System.DefaultWorkingDirectory)
+      echo " === ls === "
+      ls $(System.DefaultWorkingDirectory)
+
+    - script: |
+      echo $(System.ArtifactsDirectory)
+      echo " === ls === "
+      ls $(System.ArtifactsDirectory)
 
     - task: AzureRmWebAppDeployment@4
       inputs:
@@ -75,7 +87,7 @@ stages:
         azureSubscription: 'Azure for Students(dbad40a1-fabb-4bbc-b95a-3f8941cd501c)'
         appType: 'webAppLinux'
         WebAppName: 'wtb-2021-22-pipeline-dev'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/../*/Build/build.zip'
+        packageForLinux: '$(System.ArtifactsDirectory)/Build/build.zip'
         RuntimeStack: 'NODE|16-lts'
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
