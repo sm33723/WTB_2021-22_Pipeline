@@ -71,15 +71,11 @@ stages:
 
     - script: ls
 
-    - script: |
-      echo $(System.DefaultWorkingDirectory)
-      echo " === ls === "
-      ls $(System.DefaultWorkingDirectory)
+    - script: echo $(System.DefaultWorkingDirectory)
+    - script: ls $(System.DefaultWorkingDirectory)
 
-    - script: |
-      echo $(System.ArtifactsDirectory)
-      echo " === ls === "
-      ls $(System.ArtifactsDirectory)
+    - script: echo $(System.ArtifactsDirectory)
+    - script: ls $(System.ArtifactsDirectory)
 
     - task: AzureRmWebAppDeployment@4
       inputs:
