@@ -32,7 +32,10 @@ stages:
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
 
-        zip -r build.zip ./dist
+        cd ./dist/HelloWorld/
+        zip -r build.zip ./*
+        mv build.zip ../../build.zip
+        
       displayName: 'build project'
 
     # kopiuje zbudowany projekt do `ArtifactStagingDirectory`
@@ -69,22 +72,12 @@ stages:
         artifactName: Build
         downloadPath: '$(System.ArtifactsDirectory)' 
 
-    - script: ls
-
-    - script: echo $(System.DefaultWorkingDirectory)
-    - script: ls $(System.DefaultWorkingDirectory)
-
-    - script: echo $(System.ArtifactsDirectory)
-    - script: ls $(System.ArtifactsDirectory)
-
-    - task: AzureRmWebAppDeployment@4
+    - task: AzureWebApp@1
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'Azure for Students(dbad40a1-fabb-4bbc-b95a-3f8941cd501c)'
-        appType: 'webAppLinux'
         WebAppName: 'wtb-2021-22-pipeline-dev'
-        packageForLinux: '$(System.ArtifactsDirectory)/Build/build.zip'
-        RuntimeStack: 'NODE|16-lts'
+        package: '$(System.ArtifactsDirectory)/Build/build.zip'
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
 - stage: 'Prod'
