@@ -65,13 +65,17 @@ stages:
     - download: current
       artifact: Build
 
+    - script: ls
+
+    - scirpt: echo $(System.DefaultWorkingDirectory)
+
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'Azure for Students(dbad40a1-fabb-4bbc-b95a-3f8941cd501c)'
         appType: 'webAppLinux'
         WebAppName: 'wtb-2021-22-pipeline-dev'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/*/Build/build.zip'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/Build/build.zip'
         RuntimeStack: 'NODE|16-lts'
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
