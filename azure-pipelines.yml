@@ -76,7 +76,7 @@ stages:
       inputs:
         ConnectionType: 'AzureRM'
         azureSubscription: 'Azure for Students(dbad40a1-fabb-4bbc-b95a-3f8941cd501c)'
-        WebAppName: 'wtb-2021-22-pipeline-dev'
+        AppName: 'wtb-2021-22-pipeline-dev'
         package: '$(System.ArtifactsDirectory)/Build/build.zip'
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
