@@ -9,7 +9,7 @@ stages:
   - job:
     displayName: 'Build Job'
 
-    # build na ubuntu-20.04
+    # build na ubuntu-20.04 z npm
     pool:
       vmImage: 'ubuntu-20.04'
       demands:
@@ -19,7 +19,7 @@ stages:
       # installuje Node
     - task: NodeTool@0
       inputs:
-        versionSpec: '16.13.x'
+        versionSpec: '16'
       displayName: 'Install Node.js'
 
       # skrypt bash -> instalacja angular cli + dependencies + build + build.info
@@ -27,9 +27,11 @@ stages:
         npm install -g @angular/cli
         npm install
         ng build
+        
         echo "BUILD @ $(date +"%Y-%m-%d %H:%M:%S")" > dist/build.info
         echo "" >> dist/build.info
         echo "$(ng --version)" >> dist/build.info
+
         zip -r build.zip ./dist
       displayName: 'build project'
 
@@ -41,28 +43,37 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
     # wysyła zbudowany projekt jak artefakt do Azure'a
-    # format nazwy - > `BUILD_<DATA BUILD'a>`
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact'
       inputs: 
         PathtoPublish: $(Build.ArtifactStagingDirectory)
         ArtifactName: Build
 
+# Wysłanie zbudowanego projektu do środowiska dev
 - stage: 'Dev'
   displayName: 'Publish-Dev Stage'
   dependsOn: Build
+  
   jobs: 
   - job:
     displayName: 'Dev'
 
     pool:
       vmImage: 'ubuntu-20.04'
-      demands:
-      - npm
 
     steps:
-    - script: echo "Dev"
+    - download: current
+      artifact: Build
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Azure for Students(dbad40a1-fabb-4bbc-b95a-3f8941cd501c)'
+        appType: 'webAppLinux'
+        WebAppName: 'wtb-2021-22-pipeline'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        RuntimeStack: 'NODE|16-lts'
 
+# Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
 - stage: 'Prod'
   displayName: 'Publish-Prod Stage'
   dependsOn: Dev
@@ -73,11 +84,6 @@ stages:
 
     pool:
       vmImage: 'ubuntu-20.04'
-      demands:
-      - npm
 
     steps:
-    - task: ManualValidation@0
-      timeoutInMinutes: 1440
-
     - script: echo "Prod"
