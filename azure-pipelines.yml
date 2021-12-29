@@ -64,6 +64,9 @@ stages:
     steps:
     - download: current
       artifact: Build
+
+    - script: echo "$(System.DefaultWorkingDirectory)/Build/build.zip"
+
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
