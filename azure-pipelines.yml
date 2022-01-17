@@ -63,6 +63,8 @@ stages:
 
     pool:
       vmImage: 'ubuntu-20.04'
+      demands:
+      - npm
 
     steps:
     - task: DownloadBuildArtifacts@0
@@ -84,9 +86,10 @@ stages:
         ls -l $(System.ArtifactsDirectory)/Build
       displayName: 'ls $(System.ArtifactsDirectory)/Build'
 
-    - script: |
-        uzip $(System.ArtifactsDirectory)/Build/build.zip -d build
-      displayName: 'uzip'
+    - task: ExtractFiles@1
+      inputs:
+        archiveFilePatterns: $(System.ArtifactsDirectory)/Build/*.zip
+        destinationFolder: $(System.ArtifactsDirectory)/Build/build
 
     - script: |
         ls -l $(System.ArtifactsDirectory)/Build/build
