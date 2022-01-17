@@ -80,15 +80,15 @@ stages:
         ls -l $(System.ArtifactsDirectory)
       displayName: 'ls $(System.ArtifactsDirectory)'
 
-      - script: |
+    - script: |
         ls -l $(System.ArtifactsDirectory)/Build
       displayName: 'ls $(System.ArtifactsDirectory)/Build'
 
-      - script: |
+    - script: |
         uzip $(System.ArtifactsDirectory)/Build/build.zip -d build
       displayName: 'uzip'
 
-      - script: |
+    - script: |
         ls -l $(System.ArtifactsDirectory)/Build/build
       displayName: 'ls $(System.ArtifactsDirectory)/Build/build'
       
