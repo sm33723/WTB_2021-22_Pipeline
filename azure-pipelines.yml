@@ -80,6 +80,18 @@ stages:
         ls -l $(System.ArtifactsDirectory)
       displayName: 'ls $(System.ArtifactsDirectory)'
 
+      - script: |
+        ls -l $(System.ArtifactsDirectory)/Build
+      displayName: 'ls $(System.ArtifactsDirectory)/Build'
+
+      - script: |
+        uzip $(System.ArtifactsDirectory)/Build/build.zip -d build
+      displayName: 'uzip'
+
+      - script: |
+        ls -l $(System.ArtifactsDirectory)/Build/build
+      displayName: 'ls $(System.ArtifactsDirectory)/Build/build'
+      
     - task: AzureWebApp@1
       inputs:
         ConnectionType: 'AzureRM'
