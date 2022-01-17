@@ -70,7 +70,13 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: Build
-        downloadPath: '$(System.ArtifactsDirectory)' 
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    - script: |
+      ls -l
+
+    - script: |
+      ls -l $(System.ArtifactsDirectory)
 
     - task: AzureWebApp@1
       inputs:
@@ -80,16 +86,16 @@ stages:
         package: '$(System.ArtifactsDirectory)/Build/build.zip'
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
-- stage: 'Prod'
-  displayName: 'Publish-Prod Stage'
-  dependsOn: Dev
+# - stage: 'Prod'
+#   displayName: 'Publish-Prod Stage'
+#   dependsOn: Dev
  
-  jobs: 
-  - job:
-    displayName: 'Prod'
+#   jobs: 
+#   - job:
+#     displayName: 'Prod'
 
-    pool:
-      vmImage: 'ubuntu-20.04'
+#     pool:
+#       vmImage: 'ubuntu-20.04'
 
-    steps:
-    - script: echo "Prod"
+#     steps:
+#     - script: echo "Prod"
