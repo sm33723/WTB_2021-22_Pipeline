@@ -73,10 +73,12 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - script: |
-      ls -l
+        ls -l
+      displayName: 'ls'
 
     - script: |
-      ls -l $(System.ArtifactsDirectory)
+        ls -l $(System.ArtifactsDirectory)
+      displayName: 'ls $(System.ArtifactsDirectory)'
 
     - task: AzureWebApp@1
       inputs:
@@ -89,13 +91,10 @@ stages:
 # - stage: 'Prod'
 #   displayName: 'Publish-Prod Stage'
 #   dependsOn: Dev
- 
 #   jobs: 
 #   - job:
 #     displayName: 'Prod'
-
 #     pool:
 #       vmImage: 'ubuntu-20.04'
-
 #     steps:
 #     - script: echo "Prod"
