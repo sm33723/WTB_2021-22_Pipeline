@@ -19,7 +19,7 @@ stages:
       # installuje Node
     - task: NodeTool@0
       inputs:
-        versionSpec: '16'
+        versionSpec: '14'
       displayName: 'Install Node.js'
 
       # skrypt bash -> instalacja angular cli + dependencies + build + build.info
@@ -99,6 +99,7 @@ stages:
     - task: AzureStaticWebApp@0
       inputs:
         app_location: '$(System.ArtifactsDirectory)/Build/build'
+      env:
         azure_static_web_apps_api_token: $(deployment_token)
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
