@@ -73,32 +73,26 @@ stages:
         buildType: 'current'
         downloadType: 'single'
         artifactName: Build
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - script: |
-        ls -l
-      displayName: 'ls'
-
-    - script: |
-        ls -l $(System.ArtifactsDirectory)
-      displayName: 'ls $(System.ArtifactsDirectory)'
-
-    - script: |
-        ls -l $(System.ArtifactsDirectory)/Build
-      displayName: 'ls $(System.ArtifactsDirectory)/Build'
+        downloadPath: './'
 
     - task: ExtractFiles@1
       inputs:
-        archiveFilePatterns: $(System.ArtifactsDirectory)/Build/*.zip
-        destinationFolder: $(System.ArtifactsDirectory)/Build/build
+        archiveFilePatterns: ./Build/*.zip
+        destinationFolder: ./Build/build
 
     - script: |
-        ls -l $(System.ArtifactsDirectory)/Build/build
-      displayName: 'ls $(System.ArtifactsDirectory)/Build/build'
+        ls -l ./Build/build
+      displayName: 'ls ./Build/build'
+
+    - script: |
+        echo $(deployment_token)
+      displayName: 'echo deployment_token'
       
     - task: AzureStaticWebApp@0
       inputs:
-        app_location: '$(System.ArtifactsDirectory)/Build/build'
+        app_location: './Build/build'
+        api_location: 'api'
+        output_location: './'
       env:
         azure_static_web_apps_api_token: $(deployment_token)
 
