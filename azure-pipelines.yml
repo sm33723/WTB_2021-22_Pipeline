@@ -58,7 +58,7 @@ stages:
   dependsOn: Build
 
   variables:
-    buildConfiguration: 'prod_var_group'
+  - group: 'prod_var_group'
   
   jobs: 
   - job:
