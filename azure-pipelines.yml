@@ -104,9 +104,6 @@ stages:
     pool:
       vmImage: 'ubuntu-20.04'
 
-    environment:
-      name: 'Production'
-
     steps:
     - task: DownloadBuildArtifacts@0
       inputs:
