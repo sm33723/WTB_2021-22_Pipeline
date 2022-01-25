@@ -98,14 +98,14 @@ stages:
   - group: 'prod_var_group'
 
   jobs:
-
-  environment: Production
-  
   - job:
     displayName: 'Prod'
 
     pool:
       vmImage: 'ubuntu-20.04'
+
+    environment:
+      name: 'Production'
 
     steps:
     - task: DownloadBuildArtifacts@0
