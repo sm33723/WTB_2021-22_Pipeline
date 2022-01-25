@@ -35,6 +35,7 @@ stages:
         cd ./dist/HelloWorld/
         zip -r build.zip ./*
         mv build.zip ../../build.zip
+        cd
         
       displayName: 'build project'
 
@@ -54,11 +55,11 @@ stages:
 
 # Wysłanie zbudowanego projektu do środowiska prod
 - stage: 'Dev'
-  displayName: 'Publish-Dev Stage'
+  displayName: 'Deploy to Dev'
   dependsOn: Build
 
   variables:
-  - group: 'prod_var_group'
+  - group: 'dev_var_group'
   
   jobs: 
   - job:
@@ -79,14 +80,6 @@ stages:
       inputs:
         archiveFilePatterns: ./Build/*.zip
         destinationFolder: ./Build/build
-
-    - script: |
-        ls -l ./Build/build
-      displayName: 'ls ./Build/build'
-
-    - script: |
-        echo $(deployment_token)
-      displayName: 'echo deployment_token'
       
     - task: AzureStaticWebApp@0
       inputs:
@@ -97,13 +90,39 @@ stages:
         azure_static_web_apps_api_token: $(deployment_token)
 
 # Wysłanie zbudowanego projektu do środowiska prod (po manualnej aporbacie)
-# - stage: 'Prod'
-#   displayName: 'Publish-Prod Stage'
-#   dependsOn: Dev
-#   jobs: 
-#   - job:
-#     displayName: 'Prod'
-#     pool:
-#       vmImage: 'ubuntu-20.04'
-#     steps:
-#     - script: echo "Prod"
+- stage: 'Prod'
+  displayName: 'Deploy to Production'
+  dependsOn: Dev
+
+  variables:
+  - group: 'prod_var_group'
+
+  environment: 'Production'
+  
+  jobs: 
+  - job:
+    displayName: 'Prod'
+
+    pool:
+      vmImage: 'ubuntu-20.04'
+
+    steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: Build
+        downloadPath: './'
+
+    - task: ExtractFiles@1
+      inputs:
+        archiveFilePatterns: ./Build/*.zip
+        destinationFolder: ./Build/build
+      
+    - task: AzureStaticWebApp@0
+      inputs:
+        app_location: './Build/build'
+        api_location: 'api'
+        output_location: './'
+      env:
+        azure_static_web_apps_api_token: $(deployment_token)
